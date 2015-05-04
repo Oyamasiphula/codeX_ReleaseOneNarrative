@@ -42,24 +42,26 @@
 			});
 
 
-
+			console.log(productCountMap);
 			return productCountMap;
 		};
 
-	
-	this.mostPopular = function(){
-		var linesInFile = fs.readFileSync(folderName, 'utf8');
+		var productList = [];
+		var mostPopularMap = {};
+	var createProductList = function(csvFile){
+
+		// start
+		var linesInFile = fs.readFileSync(csvFile, 'utf8');
 		var	productsList = linesInFile.split('\r');
 
 		//remove the csv header...
 		productsList = productsList.splice(1, productsList.length)
 		
-		var mostPopularList = [];
-		var mostPopularMap = {};
+		
 
-	productsList.forEach(function(productList){
+		productsList.forEach(function(productLine){
 
-				var hold = productList.split(';');
+				var hold = productLine.split(';');
 
 				var currentItem = hold[2];
 				var numberSold =  hold[3];
@@ -75,20 +77,67 @@
 				currentItem : key,
 				numberSold: mostPopularMap[key]
 			};
-			mostPopularList.push(obj);
+			productList.push(obj);
 
 		}
-
-		mostPopularList.sort(function(a,b){
-				return b.numberSold-a.numberSold;
-			});
-		
-		console.log(mostPopularList)
-		console.log(mostPopularList.length);
-
-};
-
-	
+		// end
+		return productList;
+	}
 
 
+	this.mostPopularItem = function(){
+
+		var productList = createProductList(folderName);		
+
+		productList.sort(function(a,b){
+			return b.numberSold-a.numberSold;
+		});
+
+		console.log(productList)
+		// console.log(productList.length);
+		console.log(productList[0])
+		return productList[0];
 	};
+
+	this.leastPopularItem = function(){
+
+		var productList = createProductList(folderName);		
+
+		productList.sort(function(a,b){
+			return b.numberSold-a.numberSold;
+		});
+
+		//console.log(productList)
+		console.log(productList[productList.length-1]);
+		//console.log(productList[2])
+		return productList[productList.length-1];
+	};
+this.popularCategory = function(){
+
+	var productList = createProductList(folderName);
+			var Diary = [];
+			var DiaryMap = {};
+			/*var BeveragesMap = {};
+			var fruitMap = {}; 
+			var Canned_FoodMap = {};
+			var Starch_FoodMap = {};
+			var ToiletriesMap = {};
+			var BakeryMap = {};
+			var SweetsMap = {}; 
+ 			var ExtrasMap= {};*/
+for(var key in mostPopularMap){
+			var obj = {
+				Category : key,
+				numberSold: DiaryMap[key]
+			};
+			//Diary.push(obj);
+
+		}
+		// end
+	if (productList[1] === "Imasi" || "milk") {
+		Diary.push(productList[0]);
+	};
+		Diary.push(productList[1],productList[0]);
+		console.log(productList[1],productList[0]);
+	}
+};
